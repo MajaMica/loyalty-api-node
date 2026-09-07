@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  points       Int      @default(0)
+  transactions Transaction[]
+  coupons      Coupon[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Transaction {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pointsChange Int
+  orderId      String?
+  description  String?
+  createdAt    DateTime @default(now())
+}
+
+model Coupon {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount     Int
+  isUsed     Boolean  @default(false)
+  usedAt     DateTime?
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime?
+}
