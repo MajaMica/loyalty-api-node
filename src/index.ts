@@ -184,6 +184,8 @@ app.post('/generate-coupon', async (req, res) => {
 // Webhook for WooCommerce - called when order is completed
 app.post('/webhook/order-completed', async (req, res) => {
   try {
+    console.log('📦 WEBHOOK PAYLOAD:', JSON.stringify(req.body, null, 2));
+console.log('📦 HEADERS:', req.headers);
     // 1. Verify webhook secret (for security)
     const signature = req.headers['x-wc-webhook-signature'];
     if (signature !== process.env.WEBHOOK_SECRET) {
